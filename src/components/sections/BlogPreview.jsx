@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { blogArticles } from '../../data/content';
 import { fetchBlogs } from '../../lib/api';
 import { ArrowRightIcon, DocumentIcon, DynamicIcon, StarIcon } from '../icons/Icons';
 import Reveal from '../Reveal';
 
 export default function BlogPreview() {
-  const [articles, setArticles] = useState(blogArticles);
+  const [articles, setArticles] = useState([]);
 
   useEffect(() => {
     const loadBlogs = async () => {
       try {
         const blogs = await fetchBlogs();
-        if (blogs.length > 0) {
-          setArticles(blogs.slice(0, 3));
-        }
+        setArticles(blogs.slice(0, 3));
       } catch {
-        setArticles(blogArticles);
+        setArticles([]);
       }
     };
 
     loadBlogs();
   }, []);
+
+  if (articles.length === 0) {
+    return null;
+  }
 
   return (
     <section className="section blog-preview-v2" aria-labelledby="blog-heading">

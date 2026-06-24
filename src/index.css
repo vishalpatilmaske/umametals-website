@@ -1344,40 +1344,122 @@ button {
    Article Page
    ========================================================================== */
 
-.article-hero {
-  padding-block: calc(var(--header-h) + 2rem) 3rem;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+.article-page {
+  background: var(--color-bg);
+  padding-block: calc(var(--header-h) + 2rem) 5rem;
 }
 
-.article-hero-inner {
-  max-width: 780px;
+.article-page--loading {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+}
+
+.article-loading {
+  color: var(--color-text-muted);
+}
+
+.article-page__inner {
+  max-width: var(--container);
+}
+
+.article-page__back {
+  display: inline-flex;
+  margin-bottom: 2rem;
+}
+
+.article-page__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .article-page__layout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 3.5rem;
+  }
+}
+
+.article-page__main {
+  min-width: 0;
+}
+
+.article-page__header {
+  margin-bottom: 2rem;
 }
 
 .article-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.25rem;
+  align-items: center;
+  gap: 0.5rem 1rem;
   font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--color-text-faint);
-  margin: 1.5rem 0 1rem;
+  margin-bottom: 1rem;
 }
 
-.article-title {
+.article-meta__category {
+  color: var(--color-primary);
+}
+
+.article-meta time,
+.article-meta span:not(.article-meta__category) {
+  display: inline-flex;
+  align-items: center;
+}
+
+.article-meta time::before,
+.article-meta span:not(.article-meta__category)::before {
+  content: '|';
+  margin-right: 1rem;
+  color: var(--color-border);
+  font-weight: 400;
+}
+
+.article-page__title {
   font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-size: clamp(1.875rem, 4.5vw, 2.875rem);
   font-weight: 800;
-  line-height: 1.12;
+  line-height: 1.1;
   letter-spacing: -0.03em;
+  color: var(--color-text);
   margin-bottom: 1.25rem;
 }
 
-.article-intro {
+.article-page__lead {
   font-size: 1.125rem;
   color: var(--color-text-muted);
   line-height: 1.75;
+  max-width: 68ch;
+  padding-left: 1rem;
+  border-left: 3px solid var(--color-primary);
+}
+
+.article-page__hero {
+  margin: 0 0 2.5rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.article-page__hero img {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+}
+
+.article-page__body {
+  font-size: 1rem;
+  line-height: 1.8;
 }
 
 .article-layout {
@@ -1446,10 +1528,10 @@ button {
 
 .article-closing {
   padding: 2rem;
-  background: var(--color-surface-raised);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  margin-top: 1rem;
+  border-radius: var(--radius-lg);
+  margin-top: 3rem;
 }
 
 .article-cta-actions {
@@ -1468,7 +1550,7 @@ button {
 @media (min-width: 1024px) {
   .article-sidebar {
     position: sticky;
-    top: calc(var(--header-h) + 2rem);
+    top: calc(var(--header-h) + 1.5rem);
   }
 }
 
@@ -3729,6 +3811,58 @@ button {
   margin-bottom: 1.5rem;
   aspect-ratio: 16/9;
   object-fit: cover;
+}
+
+.article-body-html figure.image {
+  margin: 2rem 0;
+}
+
+.article-body-html figure.image img,
+.article-body-html img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  margin: 0;
+}
+
+.article-body-html figure.image a {
+  display: block;
+  pointer-events: none;
+}
+
+.article-body-html p {
+  margin-bottom: 1.35rem;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+}
+
+.article-body-html p:empty {
+  display: none;
+}
+
+.article-body-html h2,
+.article-body-html h3 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.article-body-html ul,
+.article-body-html ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+  color: var(--color-text-muted);
+}
+
+.article-body-html blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--color-text-muted);
 }
 
 .sticky-actions {

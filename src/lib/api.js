@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5050';
 
 export const categoryIconMap = {
   'CNC Laser Cutting': 'laser',
@@ -8,6 +8,68 @@ export const categoryIconMap = {
   'CNC Machining': 'drill',
   'Manufacturing Tips': 'gear',
   'Industrial Components': 'nutBolt',
+};
+
+export const resolveImageUrl = (url) => {
+  if (!url?.trim()) return '';
+
+  const trimmed = url.trim();
+
+  if (trimmed.startsWith('/uploads/')) {
+    return `${API_BASE}${trimmed}`;
+  }
+
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    const uploadsMatch = trimmed.match(/\/uploads\/[^"'\s?#]+/);
+    if (uploadsMatch) return `${API_BASE}${uploadsMatch[0]}`;
+    return trimmed;
+  }
+
+  if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+
+  return `${API_BASE}/${trimmed.replace(/^\//, '')}`;
+};
+
+export const extractFirstImageFromContent = (html) => {
+  if (!html) return '';
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return match ? resolveImageUrl(match[1]) : '';
+};
+
+export const resolveContentHtml = (html) => {
+  if (!html) return '';
+
+  return html
+    .replace(/src=["']([^"']+)["']/gi, (_, src) => `src="${resolveImageUrl(src)}"`)
+    .replace(/href=["']([^"']+)["']/gi, (_, href) => {
+      if (href.includes('/uploads/') || href.startsWith('http')) {
+        const resolved = resolveImageUrl(href);
+        if (resolved) return `href="${resolved}"`;
+      }
+      return `href="${href}"`;
+    });
+};
+
+const getCardImage = (blog) => {
+  const featured = resolveImageUrl(blog.featuredImage || blog.image);
+  if (featured) return featured;
+  return extractFirstImageFromContent(blog.content);
+};
+
+const formatBlog = (blog, { includeContent = true } = {}) => {
+  const cardImage = getCardImage(blog);
+  const featuredImage = resolveImageUrl(blog.featuredImage || '');
+
+  return {
+    ...blog,
+    image: cardImage,
+    featuredImage: blog.featuredImage || '',
+    featuredImageUrl: featuredImage,
+    content: includeContent ? resolveContentHtml(blog.content) : blog.content,
+    categoryIcon: categoryIconMap[blog.category] || 'gear',
+  };
 };
 
 export const fetchBlogs = async (params = {}) => {
@@ -26,11 +88,7 @@ export const fetchBlogs = async (params = {}) => {
   }
 
   const result = await response.json();
-  return (result.data || []).map((blog) => ({
-    ...blog,
-    image: blog.featuredImage || blog.image || '/assets/blog/blog-1.jpg',
-    categoryIcon: categoryIconMap[blog.category] || 'gear',
-  }));
+  return (result.data || []).map((blog) => formatBlog(blog, { includeContent: false }));
 };
 
 export const fetchBlogBySlug = async (slug) => {
@@ -41,13 +99,7 @@ export const fetchBlogBySlug = async (slug) => {
   }
 
   const result = await response.json();
-  const blog = result.data;
-
-  return {
-    ...blog,
-    image: blog.featuredImage || blog.image || '/assets/blog/blog-1.jpg',
-    categoryIcon: categoryIconMap[blog.category] || 'gear',
-  };
+  return formatBlog(result.data);
 };
 
 export const submitContactRequest = async (payload) => {

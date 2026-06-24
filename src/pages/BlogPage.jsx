@@ -3,14 +3,15 @@ import { usePageMeta } from '../hooks/usePageMeta';
 import { Link } from 'react-router-dom';
 import PageHeroDark from '../components/PageHeroDark';
 import Reveal from '../components/Reveal';
-import { allBlogArticles, blogCategories } from '../data/innerPages';
+import { blogCategories } from '../data/innerPages';
 import { fetchBlogs } from '../lib/api';
 import { ArrowRightIcon, DynamicIcon } from '../components/icons/Icons';
 
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [articles, setArticles] = useState(allBlogArticles);
+  const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   usePageMeta(
     'Industrial Manufacturing Blog | CNC Laser Cutting, Metal Fabrication Guides | UMA Metal Craft',
@@ -21,11 +22,11 @@ export default function BlogPage() {
     const loadBlogs = async () => {
       try {
         const blogs = await fetchBlogs();
-        if (blogs.length > 0) {
-          setArticles(blogs);
-        }
+        setArticles(blogs);
+        setError(null);
       } catch {
-        setArticles(allBlogArticles);
+        setArticles([]);
+        setError('Unable to load articles. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -54,6 +55,14 @@ export default function BlogPage() {
         <div className="container">
           {loading && (
             <p className="text-muted-sm" style={{ marginBottom: '1rem' }}>Loading articles...</p>
+          )}
+
+          {!loading && error && (
+            <p className="text-muted-sm" style={{ marginBottom: '1rem', color: '#b45309' }}>{error}</p>
+          )}
+
+          {!loading && !error && articles.length === 0 && (
+            <p className="text-muted-sm" style={{ marginBottom: '1rem' }}>No articles published yet. Check back soon.</p>
           )}
 
           <Reveal>
