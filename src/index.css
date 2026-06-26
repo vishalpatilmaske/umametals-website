@@ -1643,6 +1643,14 @@ button {
   margin-bottom: 1rem;
 }
 
+.footer-logo .logo-image {
+  display: block;
+  height: 78px;
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+}
+
 .footer-tagline {
   font-size: 0.9375rem;
   color: var(--color-text-muted);

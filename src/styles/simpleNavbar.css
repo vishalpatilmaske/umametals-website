@@ -40,6 +40,14 @@
   color: #fff;
 }
 
+.simple-header-logo .logo-image {
+  display: block;
+  height: 76px;
+  width: auto;
+  max-width: min(180px, 42vw);
+  object-fit: contain;
+}
+
 .simple-header-logo .logo-mark {
   color: #fff;
 }
@@ -384,6 +392,14 @@
 
 .simple-header-logo:hover {
   color: #fff;
+}
+
+.simple-header-logo .logo-image {
+  display: block;
+  height: 76px;
+  width: auto;
+  max-width: min(180px, 42vw);
+  object-fit: contain;
 }
 
 .simple-header-logo .logo-mark {
